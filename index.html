@@ -1,0 +1,262 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PALWORLD ITALIA — Classifiche</title>
+<style>
+  :root {
+    --sfondo: #0e1116; --pannello: #161b22; --bordo: #263040;
+    --testo: #e6edf3; --tenue: #8b949e; --oro: #f1c40f; --verde: #2ecc71;
+    --rosso: #e74c3c; --viola: #9b59b6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--sfondo); color: var(--testo);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  header {
+    padding: 22px 20px 14px; border-bottom: 1px solid var(--bordo);
+    background: linear-gradient(180deg, #16321f 0%, var(--pannello) 60%);
+  }
+  h1 { margin: 0; font-size: 22px; letter-spacing: .3px; }
+  h1 span { color: var(--verde); }
+  .sottotitolo { color: var(--tenue); font-size: 13px; margin-top: 4px; }
+  nav { display: flex; gap: 6px; padding: 12px 20px 0; flex-wrap: wrap; }
+  nav button {
+    background: var(--pannello); color: var(--tenue); border: 1px solid var(--bordo);
+    padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 14px;
+  }
+  nav button.attivo { color: var(--testo); border-bottom-color: var(--pannello); font-weight: 600; }
+  main { padding: 16px 20px 60px; }
+  .barra { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  input[type=search] {
+    background: var(--pannello); border: 1px solid var(--bordo); color: var(--testo);
+    padding: 9px 12px; border-radius: 8px; min-width: 220px; font-size: 14px;
+  }
+  .conteggio { color: var(--tenue); font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--bordo); text-align: right; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  th {
+    position: sticky; top: 0; background: var(--pannello); cursor: pointer;
+    font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: var(--tenue);
+    white-space: nowrap; user-select: none;
+  }
+  th:hover { color: var(--testo); }
+  th.ordinata::after { content: " ▾"; color: var(--verde); }
+  tbody tr:hover { background: #1b2230; }
+  td.pos { color: var(--tenue); width: 44px; }
+  .top1 { color: var(--oro); font-weight: 700; }
+  .nome { font-weight: 600; cursor: pointer; }
+  .nome:hover { color: var(--verde); text-decoration: underline; }
+  .griglia { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .scheda { background: var(--pannello); border: 1px solid var(--bordo); border-radius: 10px; padding: 14px; }
+  .scheda h3 { margin: 0 0 8px; font-size: 15px; }
+  .scheda ol { margin: 0; padding-left: 22px; }
+  .scheda li { padding: 2px 0; }
+  .scheda li b { color: var(--testo); }
+  dialog {
+    background: var(--pannello); color: var(--testo); border: 1px solid var(--bordo);
+    border-radius: 12px; max-width: 560px; width: 92%; padding: 0;
+  }
+  dialog::backdrop { background: #000a; }
+  .testa { padding: 16px 18px; border-bottom: 1px solid var(--bordo); }
+  .testa h2 { margin: 0; font-size: 20px; }
+  .corpo { padding: 14px 18px 18px; }
+  .coppie { display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; }
+  .coppie div:nth-child(odd) { color: var(--tenue); }
+  .chiudi {
+    margin: 12px 18px 16px; padding: 8px 16px; background: #21262d; color: var(--testo);
+    border: 1px solid var(--bordo); border-radius: 8px; cursor: pointer;
+  }
+  .pal { background: #1b2230; border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+  .tag { font-size: 12px; color: var(--tenue); }
+  footer { color: var(--tenue); font-size: 12px; padding: 0 20px 30px; }
+  .vuoto { color: var(--tenue); padding: 30px 0; text-align: center; }
+</style>
+
+<header>
+  <h1>PALWORLD <span>ITALIA</span> — Classifiche</h1>
+  <div class="sottotitolo" id="sottotitolo">caricamento…</div>
+</header>
+
+<nav>
+  <button data-scheda="giocatori" class="attivo">Giocatori</button>
+  <button data-scheda="settimana">Sfida della settimana</button>
+  <button data-scheda="gilde">Gilde</button>
+</nav>
+
+<main>
+  <section id="giocatori">
+    <div class="barra">
+      <input type="search" id="cerca" placeholder="Cerca un giocatore…" autocomplete="off">
+      <span class="conteggio" id="conteggio"></span>
+    </div>
+    <table>
+      <thead><tr id="intestazioni"></tr></thead>
+      <tbody id="righe"></tbody>
+    </table>
+  </section>
+
+  <section id="settimana" hidden></section>
+  <section id="gilde" hidden></section>
+</main>
+
+<footer id="pie"></footer>
+
+<dialog id="scheda-giocatore">
+  <div class="testa"><h2 id="dettaglio-nome"></h2><div class="tag" id="dettaglio-sub"></div></div>
+  <div class="corpo" id="dettaglio-corpo"></div>
+  <button class="chiudi" onclick="document.getElementById('scheda-giocatore').close()">Chiudi</button>
+</dialog>
+
+<script>
+// Colonne della tabella giocatori: chiave nel JSON, titolo, e se e' un numero.
+const COLONNE = [
+  ["nome", "Giocatore"], ["livello", "Lv"], ["pal", "Pal"],
+  ["paldeck", "Paldeck"], ["bosses_torri", "Torri"], ["bosses_raid", "Raid"],
+  ["dungeon", "Dungeon"], ["captures_total", "Catture"], ["tesori", "Tesori"],
+  ["accampamenti", "Accamp."], ["reliquie", "Reliquie"], ["pt", "Pal più forte"],
+];
+let DATI = null, ordine = "pt", crescente = false;
+
+const num = v => (v === undefined || v === null) ? "—" : v.toLocaleString("it-IT");
+
+function valore(g, chiave) {
+  if (chiave === "pt") return g.miglior_pal ? g.miglior_pal.pt : null;
+  return g[chiave];
+}
+
+function disegnaGiocatori() {
+  const filtro = document.getElementById("cerca").value.trim().toLowerCase();
+  const lista = DATI.giocatori
+    .filter(g => !filtro || (g.nome || "").toLowerCase().includes(filtro))
+    .sort((a, b) => {
+      const x = valore(a, ordine), y = valore(b, ordine);
+      if (ordine === "nome") return (a.nome || "").localeCompare(b.nome || "") * (crescente ? 1 : -1);
+      return ((y ?? -1) - (x ?? -1)) * (crescente ? -1 : 1);
+    });
+
+  document.getElementById("intestazioni").innerHTML =
+    '<th class="pos">#</th>' + COLONNE.map(([k, t]) =>
+      `<th data-k="${k}" class="${k === ordine ? "ordinata" : ""}">${t}</th>`).join("");
+  document.querySelectorAll("#intestazioni th[data-k]").forEach(th =>
+    th.onclick = () => {
+      const k = th.dataset.k;
+      crescente = (k === ordine) ? !crescente : false;
+      ordine = k; disegnaGiocatori();
+    });
+
+  document.getElementById("righe").innerHTML = lista.map((g, i) => {
+    const p = g.miglior_pal;
+    const forte = p ? `${p.specie} lv${p.livello} — ${num(p.pt)} PT` : "—";
+    return `<tr>
+      <td class="pos">${i + 1}</td>
+      <td class="nome ${i === 0 ? "top1" : ""}" data-nome="${(g.nome||"").replace(/"/g,"&quot;")}">${g.nome || "?"}</td>
+      <td>${num(g.livello)}</td><td>${num(g.pal)}</td><td>${num(g.paldeck)}</td>
+      <td>${num(g.bosses_torri)}</td><td>${num(g.bosses_raid)}</td><td>${num(g.dungeon)}</td>
+      <td>${num(g.captures_total)}</td><td>${num(g.tesori)}</td>
+      <td>${num(g.accampamenti)}</td><td>${num(g.reliquie)}</td>
+      <td style="text-align:left">${forte}</td></tr>`;
+  }).join("") || '<tr><td colspan="13" class="vuoto">Nessun giocatore trovato</td></tr>';
+
+  document.querySelectorAll("td.nome").forEach(td =>
+    td.onclick = () => dettaglio(td.dataset.nome));
+  document.getElementById("conteggio").textContent =
+    `${lista.length} giocatori su ${DATI.giocatori.length}`;
+}
+
+function dettaglio(nome) {
+  const g = DATI.giocatori.find(x => x.nome === nome);
+  if (!g) return;
+  const p = g.miglior_pal;
+  const simboli = p ? [p.lucky && "✨ lucky", p.alpha && "👑 alpha",
+                       p.risvegliato && "🔥 risvegliato"].filter(Boolean).join(" · ") : "";
+  const gilda = DATI.gilde.find(x => x.membri.includes(nome));
+  const voci = [
+    ["Livello", num(g.livello)], ["Pal posseduti", num(g.pal)],
+    ["Paldeck (specie)", num(g.paldeck)], ["Catture totali", num(g.captures_total)],
+    ["Boss delle torri", num(g.bosses_torri)], ["Boss dei raid", num(g.bosses_raid)],
+    ["Dungeon completati", num(g.dungeon)], ["Piattaforme petrolifere", num(g.oilrig)],
+    ["Predatori abbattuti", num(g.predatori)], ["Tesori trovati", num(g.tesori)],
+    ["Accampamenti conquistati", num(g.accampamenti)], ["Boss sul campo", num(g.boss_campo)],
+    ["Reliquie raccolte", num(g.reliquie)], ["Pesci pescati", num(g.pesca)],
+    ["Condensazioni", num(g.condensazioni)],
+    ["Gilda", gilda ? gilda.nome : "—"],
+  ];
+  document.getElementById("dettaglio-nome").textContent = nome;
+  document.getElementById("dettaglio-sub").textContent =
+    gilda ? `Gilda: ${gilda.nome}` : "Senza gilda";
+  document.getElementById("dettaglio-corpo").innerHTML =
+    (p ? `<div class="pal"><b>Pal più forte:</b> ${p.specie} lv${p.livello}
+          — <b>${num(p.pt)} PT</b><div class="tag">
+          ${simboli}${p.stelle ? " · ⭐" + p.stelle : ""}${p.iv ? " · IV " + p.iv : ""}
+          ${p.fiducia ? " · 💞 " + p.fiducia : ""}</div></div>` : "") +
+    '<div class="coppie">' +
+    voci.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join("") + "</div>";
+  document.getElementById("scheda-giocatore").showModal();
+}
+
+function classificaHTML(voci, formatta) {
+  if (!voci || !voci.length) return '<div class="vuoto">nessun dato</div>';
+  const medaglie = ["🥇", "🥈", "🥉"];
+  return "<ol>" + voci.slice(0, 25).map((v, i) =>
+    `<li><b>${v.nome}</b> — ${formatta ? formatta(v.valore) : num(v.valore)}
+     ${i < 3 ? medaglie[i] : ""}</li>`).join("") + "</ol>";
+}
+
+function disegnaSettimana() {
+  const s = DATI.settimana;
+  const ore = v => (v / 3600).toFixed(1) + " h";
+  let html = `<h2 style="margin:4px 0 14px">Settimana ${s.chiave}</h2><div class="griglia">`;
+  for (const sfida of s.sfide) {
+    html += `<div class="scheda"><h3>${sfida.emoji} ${sfida.nome} <span class="tag">
+             — sfida a rotazione</span></h3>${classificaHTML(sfida.classifica)}</div>`;
+  }
+  for (const [titolo, voci] of Object.entries(s.classifiche)) {
+    html += `<div class="scheda"><h3>${titolo}</h3>
+             ${classificaHTML(voci, titolo === "Ore di gioco" ? ore : null)}</div>`;
+  }
+  html += `<div class="scheda"><h3>MVP</h3>${classificaHTML(s.mvp)}</div></div>`;
+  document.getElementById("settimana").innerHTML = html;
+}
+
+function disegnaGilde() {
+  const g = [...DATI.gilde].sort((a, b) => b.spedizioni - a.spedizioni);
+  document.getElementById("gilde").innerHTML =
+    `<div class="conteggio" style="margin-bottom:10px">${g.length} gilde</div>` +
+    '<table><thead><tr><th class="pos">#</th><th>Gilda</th><th>Livello</th>' +
+    '<th>Membri</th><th>Accampamenti</th><th>Spedizioni</th></tr></thead><tbody>' +
+    g.map((x, i) => `<tr><td class="pos">${i + 1}</td>
+      <td class="${i === 0 ? "top1" : ""}"><b>${x.nome}</b>
+      <div class="tag">${x.membri.slice(0, 6).join(", ")}${x.membri.length > 6 ? "…" : ""}</div></td>
+      <td>${num(x.livello)}</td><td>${x.membri.length}</td>
+      <td>${num(x.accampamenti)}</td><td>${num(x.spedizioni)}</td></tr>`).join("") +
+    "</tbody></table>";
+}
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.remove("attivo"));
+  b.classList.add("attivo");
+  ["giocatori", "settimana", "gilde"].forEach(s =>
+    document.getElementById(s).hidden = (s !== b.dataset.scheda));
+});
+document.getElementById("cerca").oninput = disegnaGiocatori;
+
+fetch("dati.json?" + Date.now())
+  .then(r => r.json())
+  .then(d => {
+    DATI = d;
+    const quando = new Date(d.aggiornato);
+    document.getElementById("sottotitolo").textContent =
+      `${d.giocatori.length} giocatori · ${d.gilde.length} gilde · aggiornato ${quando.toLocaleString("it-IT")}`;
+    document.getElementById("pie").textContent =
+      "PT = indice di potenza (ATK×4 + DIF×3 + HP÷5 con statistiche reali). " +
+      "I pal posseduti comprendono il magazzino dimensionale. " +
+      "Le sfide contano solo i progressi della settimana in corso.";
+    disegnaGiocatori(); disegnaSettimana(); disegnaGilde();
+  })
+  .catch(e => {
+    document.getElementById("sottotitolo").textContent = "dati non disponibili";
+    document.getElementById("righe").innerHTML =
+      '<tr><td colspan="13" class="vuoto">Impossibile caricare dati.json</td></tr>';
+  });
+</script>
