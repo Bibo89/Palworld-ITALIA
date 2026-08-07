@@ -32,6 +32,9 @@
     padding: 9px 12px; border-radius: 8px; min-width: 220px; font-size: 14px;
   }
   .conteggio { color: var(--tenue); font-size: 13px; }
+  /* la tabella dei giocatori ha molte colonne: scorre da sola in orizzontale,
+     così la pagina non si allarga oltre lo schermo sui telefoni */
+  .scorri { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table { border-collapse: collapse; width: 100%; }
   th, td { padding: 8px 10px; border-bottom: 1px solid var(--bordo); text-align: right; }
   th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
@@ -90,10 +93,14 @@
       <input type="search" id="cerca" placeholder="Cerca un giocatore…" autocomplete="off">
       <span class="conteggio" id="conteggio"></span>
     </div>
-    <table>
-      <thead><tr id="intestazioni"></tr></thead>
-      <tbody id="righe"></tbody>
-    </table>
+    <!-- diciotto colonne: su schermi stretti la tabella scorre per conto suo
+         invece di sfondare la pagina -->
+    <div class="scorri">
+      <table>
+        <thead><tr id="intestazioni"></tr></thead>
+        <tbody id="righe"></tbody>
+      </table>
+    </div>
   </section>
 
   <section id="settimana" hidden></section>
@@ -109,12 +116,34 @@
 </dialog>
 
 <script>
-// Colonne della tabella giocatori: chiave nel JSON, titolo, e se e' un numero.
+// I gradi dell'arena, dal piu' basso al piu' alto: nel JSON arrivano come
+// numero da 1 a 7, ma "Leggenda" dice molto piu' di "7".
+const GRADI_ARENA = ["Bronzo", "Argento", "Oro", "Platino", "Diamante", "Maestro", "Leggenda"];
+
+// Colonne della tabella: chiave nel JSON, titolo e (facoltativo) come scriverla.
+// Le celle vengono generate da QUESTO elenco: aggiungere una classifica e' una
+// riga sola, e intestazioni e contenuto non possono piu' disallinearsi.
 const COLONNE = [
-  ["nome", "Giocatore"], ["livello", "Lv"], ["pal", "Pal"],
-  ["paldeck", "Paldeck"], ["bosses_torri", "Torri"], ["bosses_raid", "Raid"],
-  ["dungeon", "Dungeon"], ["captures_total", "Catture"], ["tesori", "Tesori"],
-  ["accampamenti", "Accamp."], ["reliquie", "Reliquie"], ["pt", "Pal più forte"],
+  ["nome",           "Giocatore"],
+  ["livello",        "Lv"],
+  ["pal",            "Pal"],
+  ["paldeck",        "Paldeck"],
+  ["bosses_torri",   "Torri"],
+  ["bosses_raid",    "Raid"],
+  ["dungeon",        "Dungeon"],
+  ["captures_total", "Catture"],
+  ["tesori",         "Tesori"],
+  ["accampamenti",   "Accamp."],
+  ["reliquie",       "Reliquie"],
+  ["oilrig",         "Oilrig"],
+  ["predatori",      "Predatori"],
+  ["pesca",          "Pesca"],
+  ["condensazioni",  "Condens."],
+  ["macellati",      "Macellati"],
+  ["arena_grado",    "Arena",         v => v ? (GRADI_ARENA[v - 1] || v) : "—"],
+  ["pt",             "Pal più forte", (v, g) => g.miglior_pal
+      ? `${g.miglior_pal.specie} lv${g.miglior_pal.livello} — ${num(g.miglior_pal.pt)} PT`
+      : "—"],
 ];
 let DATI = null, ordine = "pt", crescente = false;
 
@@ -146,17 +175,17 @@ function disegnaGiocatori() {
     });
 
   document.getElementById("righe").innerHTML = lista.map((g, i) => {
-    const p = g.miglior_pal;
-    const forte = p ? `${p.specie} lv${p.livello} — ${num(p.pt)} PT` : "—";
-    return `<tr>
-      <td class="pos">${i + 1}</td>
-      <td class="nome ${i === 0 ? "top1" : ""}" data-nome="${(g.nome||"").replace(/"/g,"&quot;")}">${g.nome || "?"}</td>
-      <td>${num(g.livello)}</td><td>${num(g.pal)}</td><td>${num(g.paldeck)}</td>
-      <td>${num(g.bosses_torri)}</td><td>${num(g.bosses_raid)}</td><td>${num(g.dungeon)}</td>
-      <td>${num(g.captures_total)}</td><td>${num(g.tesori)}</td>
-      <td>${num(g.accampamenti)}</td><td>${num(g.reliquie)}</td>
-      <td style="text-align:left">${forte}</td></tr>`;
-  }).join("") || '<tr><td colspan="13" class="vuoto">Nessun giocatore trovato</td></tr>';
+    const celle = COLONNE.map(([k, , scrivi]) => {
+      if (k === "nome") {
+        return `<td class="nome ${i === 0 ? "top1" : ""}" data-nome="${(g.nome||"").replace(/"/g,"&quot;")}">${g.nome || "?"}</td>`;
+      }
+      const v = valore(g, k);
+      const testo = scrivi ? scrivi(v, g) : num(v);
+      // il pal più forte è testo, non un numero: allineato a sinistra
+      return `<td${k === "pt" ? ' style="text-align:left"' : ""}>${testo}</td>`;
+    }).join("");
+    return `<tr><td class="pos">${i + 1}</td>${celle}</tr>`;
+  }).join("") || `<tr><td colspan="${COLONNE.length + 1}" class="vuoto">Nessun giocatore trovato</td></tr>`;
 
   document.querySelectorAll("td.nome").forEach(td =>
     td.onclick = () => dettaglio(td.dataset.nome));
