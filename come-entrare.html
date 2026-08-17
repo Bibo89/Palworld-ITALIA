@@ -1,0 +1,89 @@
+<meta charset="utf-8">
+<title>Come entrare — Palworld Italia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sito.css">
+<header>
+  <div class="wrap">
+    <div class="testa">
+      <img class="logo" src="logo.png" alt="Palworld Italia">
+      <div class="marchio"><span class="n tit">Palworld Italia</span><span class="s">Server della community</span></div>
+      <div class="stato" id="stato" hidden></div>
+      <a class="discord" href="https://discord.gg/XDYvFAQQqK" target="_blank" rel="noopener">Entra nel Discord</a>
+    </div>
+    <nav>
+      <a href="index.html">Classifica</a>
+      <a href="regole.html">Regole</a>
+      <a href="come-entrare.html" aria-current="page">Come entrare</a>
+      <a href="eventi.html">Eventi</a>
+      <a href="mappa.html">Mappa</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <h1>Come entrare nel server</h1>
+      <p>Server PvE italiano, aperto e senza password. Ti serve solo l'indirizzo.</p>
+    </div>
+  </div>
+  <div class="griglia" style="grid-template-columns:1.15fr .85fr">
+    <div class="blocco">
+      <h2>Indirizzo del server</h2>
+      <div class="indirizzo">
+        <span class="mono" id="ind">palworlditalia.pals.farm:28468</span>
+        <button class="copia" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('ind').textContent).then(()=>{this.textContent='Copiato'})">Copia</button>
+      </div>
+      <h3>Passo per passo</h3>
+      <ol class="passi">
+        <li><b>Apri Palworld e vai su Multigiocatore</b><span>Poi la scheda dei server della community.</span></li>
+        <li><b>Cerca <code>PALWORLD ITALIA</code></b><span>Oppure incolla l'indirizzo qui sopra nella ricerca per indirizzo.</span></li>
+        <li><b>Entra e crea il personaggio</b><span>Nessuna password: se il server è pieno riprova poco dopo.</span></li>
+        <li><b>Passa dal Discord</b><span>Annunci, eventi, classifiche e segnalazioni stanno lì.</span></li>
+        <li><b>Leggi le regole</b><span>Sono dieci e si leggono in un minuto.</span></li>
+      </ol>
+    </div>
+    <div class="blocco">
+      <h2>Il server in breve</h2>
+      <dl class="dati">
+        <dt>Modalità</dt><dd>PvE — nessun PvP</dd>
+        <dt>Community</dt><dd>~190 giocatori registrati</dd>
+        <dt>Esperienza</dt><dd>×1.5</dd>
+        <dt>Cattura</dt><dd>×1.1</dd>
+        <dt>Fuso orario</dt><dd>Europe/Rome</dd>
+        <dt>Attivo</dt><dd>24 ore su 24</dd>
+        <dt>Piattaforme</dt><dd>Crossplay</dd>
+      </dl>
+      <h3>Comandi in chat</h3>
+      <ul class="lista">
+        <li><code>!top</code> <b>classifiche</b> del momento</li>
+        <li><code>!vota Nome</code> vota l'<b>MVP</b> della settimana</li>
+        <li><code>!caccia</code> dove è comparso il <b>boss</b> e quanto tempo resta</li>
+        <li><code>!aiuto</code> elenco completo</li>
+      </ul>
+    </div>
+  </div>
+  <div class="griglia">
+    <div class="blocco">
+      <h2>Vota il server, prendi i premi</h2>
+      <p>Il voto su <a href="https://palworld-italia.it" target="_blank" rel="noopener">palworld-italia.it</a> fa arrivare i premi in gioco da soli, senza chiedere niente a nessuno. Servono circa tre minuti dal voto: l'attesa è del sito, non del server.</p>
+      <ul class="lista">
+        <li>Devi essere <b>online</b> quando il premio arriva, altrimenti resta in attesa e riparte al prossimo accesso.</li>
+        <li>Con l'<b>inventario pieno</b> il premio non viene consegnato: fai spazio e riprova.</li>
+        <li>Il sito accetta <b>solo lettere e numeri, massimo 15 caratteri</b>: se in gioco hai spazi o simboli nel nome, scrivi la versione ripulita e avvisa un admin, così il premio ti trova.</li>
+      </ul>
+    </div>
+    <div class="blocco">
+      <h2>Problemi all'ingresso</h2>
+      <ul class="lista">
+        <li><b>Il server non compare nella lista:</b> cerca per indirizzo invece che per nome, la lista della community non è sempre aggiornata.</li>
+        <li><b>Ti sbatte fuori appena entri:</b> di solito è un riavvio o un aggiornamento in corso, riprova fra qualche minuto.</li>
+        <li><b>Versione diversa:</b> aggiorna il gioco, il server sta sempre sull'ultima.</li>
+        <li>Se non si risolve, <a href="https://discord.gg/XDYvFAQQqK" target="_blank" rel="noopener">scrivi su Discord</a>: gli admin sono Bibo89 e Mone.</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span>Palworld Italia — server PvE della community italiana.</span><a href="https://discord.gg/XDYvFAQQqK" target="_blank" rel="noopener">Discord</a><a href="https://palworld-italia.it" target="_blank" rel="noopener">Vota il server</a></footer>
+</div>
+<script src="online.js"></script>

@@ -1,157 +1,140 @@
 <meta charset="utf-8">
+<title>Classifica giocatori — Palworld Italia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PALWORLD ITALIA — Classifiche</title>
-<style>
-  :root {
-    --sfondo: #0e1116; --pannello: #161b22; --bordo: #263040;
-    --testo: #e6edf3; --tenue: #8b949e; --oro: #f1c40f; --verde: #2ecc71;
-    --rosso: #e74c3c; --viola: #9b59b6;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--sfondo); color: var(--testo);
-    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  }
-  header {
-    padding: 22px 20px 14px; border-bottom: 1px solid var(--bordo);
-    background: linear-gradient(180deg, #16321f 0%, var(--pannello) 60%);
-  }
-  h1 { margin: 0; font-size: 22px; letter-spacing: .3px; }
-  h1 span { color: var(--verde); }
-  .sottotitolo { color: var(--tenue); font-size: 13px; margin-top: 4px; }
-  nav { display: flex; gap: 6px; padding: 12px 20px 0; flex-wrap: wrap; }
-  nav button {
-    background: var(--pannello); color: var(--tenue); border: 1px solid var(--bordo);
-    padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 14px;
-  }
-  nav button.attivo { color: var(--testo); border-bottom-color: var(--pannello); font-weight: 600; }
-  main { padding: 16px 20px 60px; }
-  .barra { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
-  input[type=search] {
-    background: var(--pannello); border: 1px solid var(--bordo); color: var(--testo);
-    padding: 9px 12px; border-radius: 8px; min-width: 220px; font-size: 14px;
-  }
-  .conteggio { color: var(--tenue); font-size: 13px; }
-  /* la tabella dei giocatori ha molte colonne: scorre da sola in orizzontale,
-     così la pagina non si allarga oltre lo schermo sui telefoni */
-  .scorri { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { padding: 8px 10px; border-bottom: 1px solid var(--bordo); text-align: right; }
-  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
-  th {
-    position: sticky; top: 0; background: var(--pannello); cursor: pointer;
-    font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: var(--tenue);
-    white-space: nowrap; user-select: none;
-  }
-  th:hover { color: var(--testo); }
-  th.ordinata::after { content: " ▾"; color: var(--verde); }
-  tbody tr:hover { background: #1b2230; }
-  td.pos { color: var(--tenue); width: 44px; }
-  .top1 { color: var(--oro); font-weight: 700; }
-  .nome { font-weight: 600; cursor: pointer; }
-  .nome:hover { color: var(--verde); text-decoration: underline; }
-  .griglia { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-  .scheda { background: var(--pannello); border: 1px solid var(--bordo); border-radius: 10px; padding: 14px; }
-  .scheda h3 { margin: 0 0 8px; font-size: 15px; }
-  .scheda ol { margin: 0; padding-left: 22px; }
-  .scheda li { padding: 2px 0; }
-  .scheda li b { color: var(--testo); }
-  dialog {
-    background: var(--pannello); color: var(--testo); border: 1px solid var(--bordo);
-    border-radius: 12px; max-width: 560px; width: 92%; padding: 0;
-  }
-  dialog::backdrop { background: #000a; }
-  .testa { padding: 16px 18px; border-bottom: 1px solid var(--bordo); }
-  .testa h2 { margin: 0; font-size: 20px; }
-  .corpo { padding: 14px 18px 18px; }
-  .coppie { display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; }
-  .coppie div:nth-child(odd) { color: var(--tenue); }
-  .chiudi {
-    margin: 12px 18px 16px; padding: 8px 16px; background: #21262d; color: var(--testo);
-    border: 1px solid var(--bordo); border-radius: 8px; cursor: pointer;
-  }
-  .pal { background: #1b2230; border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
-  .tag { font-size: 12px; color: var(--tenue); }
-  footer { color: var(--tenue); font-size: 12px; padding: 0 20px 30px; }
-  .vuoto { color: var(--tenue); padding: 30px 0; text-align: center; }
-</style>
-
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sito.css">
 <header>
-  <h1>PALWORLD <span>ITALIA</span> — Classifiche</h1>
-  <div class="sottotitolo" id="sottotitolo">caricamento…</div>
+  <div class="wrap">
+    <div class="testa">
+      <img class="logo" src="logo.png" alt="Palworld Italia">
+      <div class="marchio"><span class="n tit">Palworld Italia</span><span class="s">Server della community</span></div>
+      <div class="stato" id="stato" hidden></div>
+      <a class="discord" href="https://discord.gg/XDYvFAQQqK" target="_blank" rel="noopener">Entra nel Discord</a>
+    </div>
+    <nav>
+      <a href="index.html" aria-current="page">Classifica</a>
+      <a href="regole.html">Regole</a>
+      <a href="come-entrare.html">Come entrare</a>
+      <a href="eventi.html">Eventi</a>
+      <a href="mappa.html">Mappa</a>
+    </nav>
+  </div>
 </header>
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <h1>Classifica giocatori</h1>
+      <p>Clic su una riga per aprire tutte le statistiche del giocatore.</p>
+    </div>
+    <span class="agg" id="agg">caricamento…</span>
+  </div>
 
-<nav>
-  <button data-scheda="giocatori" class="attivo">Giocatori</button>
-  <button data-scheda="settimana">Sfida della settimana</button>
-  <button data-scheda="gilde">Gilde</button>
-</nav>
+  <div class="schede">
+    <button data-scheda="giocatori" class="attiva">Giocatori</button>
+    <button data-scheda="settimana">Sfida della settimana</button>
+    <button data-scheda="gilde">Gilde</button>
+  </div>
 
-<main>
   <section id="giocatori">
+    <div class="podio" id="podio"></div>
+
     <div class="barra">
       <input type="search" id="cerca" placeholder="Cerca un giocatore…" autocomplete="off">
+      <select id="ordina"></select>
       <span class="conteggio" id="conteggio"></span>
     </div>
-    <!-- diciotto colonne: su schermi stretti la tabella scorre per conto suo
-         invece di sfondare la pagina -->
-    <div class="scorri">
+
+    <div class="tabella">
       <table>
-        <thead><tr id="intestazioni"></tr></thead>
-        <tbody id="righe"></tbody>
+        <thead><tr><th class="pos">#</th><th>Giocatore</th><th>Lv</th><th>Pal</th><th>Catture</th><th>Arena</th><th>Pal più forte</th></tr></thead>
+        <tbody id="corpo"></tbody>
       </table>
     </div>
+    <div class="carte" id="carte"></div>
   </section>
 
   <section id="settimana" hidden></section>
   <section id="gilde" hidden></section>
-</main>
 
-<footer id="pie"></footer>
-
-<dialog id="scheda-giocatore">
-  <div class="testa"><h2 id="dettaglio-nome"></h2><div class="tag" id="dettaglio-sub"></div></div>
-  <div class="corpo" id="dettaglio-corpo"></div>
-  <button class="chiudi" onclick="document.getElementById('scheda-giocatore').close()">Chiudi</button>
-</dialog>
-
+  <footer><span>Palworld Italia — server PvE della community italiana.</span><a href="https://discord.gg/XDYvFAQQqK" target="_blank" rel="noopener">Discord</a><a href="regole.html">Regolamento</a></footer>
+</div>
 <script>
 // I gradi dell'arena, dal piu' basso al piu' alto: nel JSON arrivano come
 // numero da 1 a 7, ma "Leggenda" dice molto piu' di "7".
 const GRADI_ARENA = ["Bronzo", "Argento", "Oro", "Platino", "Diamante", "Maestro", "Leggenda"];
+const ARENA_ALTA = new Set(["Maestro", "Leggenda"]);
 
-// Colonne della tabella: chiave nel JSON, titolo e (facoltativo) come scriverla.
-// Le celle vengono generate da QUESTO elenco: aggiungere una classifica e' una
-// riga sola, e intestazioni e contenuto non possono piu' disallinearsi.
-const COLONNE = [
-  ["nome",           "Giocatore"],
-  ["livello",        "Lv"],
-  ["pal",            "Pal"],
+// Metriche che non hanno una colonna propria in tabella: si raggiungono dal
+// menu "ordina per" e finiscono nel pannello di dettaglio della riga.
+const METRICHE = [
+  ["pt",             "Pal più forte (PT)"],
+  ["livello",        "Livello"],
+  ["pal",             "Pal posseduti"],
   ["paldeck",        "Paldeck"],
-  ["bosses_torri",   "Torri"],
-  ["bosses_raid",    "Raid"],
-  ["dungeon",        "Dungeon"],
-  ["captures_total", "Catture"],
-  ["tesori",         "Tesori"],
-  ["accampamenti",   "Accamp."],
-  ["reliquie",       "Reliquie"],
-  ["oilrig",         "Oilrig"],
-  ["predatori",      "Predatori"],
-  ["pesca",          "Pesca"],
-  ["condensazioni",  "Condens."],
+  ["captures_total", "Catture totali"],
+  ["bosses_raid",    "Boss dei raid"],
+  ["bosses_torri",   "Boss delle torri"],
+  ["dungeon",        "Dungeon completati"],
+  ["tesori",         "Tesori trovati"],
+  ["accampamenti",   "Accampamenti conquistati"],
+  ["reliquie",       "Reliquie raccolte"],
+  ["oilrig",         "Piattaforme petrolifere"],
+  ["predatori",      "Predatori abbattuti"],
+  ["pesca",          "Pesci pescati"],
+  ["condensazioni",  "Condensazioni"],
   ["macellati",      "Macellati"],
-  ["arena_grado",    "Arena",         v => v ? (GRADI_ARENA[v - 1] || v) : "—"],
-  ["pt",             "Pal più forte", (v, g) => g.miglior_pal
-      ? `${g.miglior_pal.specie} lv${g.miglior_pal.livello} — ${num(g.miglior_pal.pt)} PT`
-      : "—"],
+  ["arena_grado",    "Grado Arena"],
+  ["nome",           "Nome (A-Z)"],
 ];
-let DATI = null, ordine = "pt", crescente = false;
+
+let DATI = null, ordine = "pt";
 
 const num = v => (v === undefined || v === null) ? "—" : v.toLocaleString("it-IT");
+const gradoArena = v => v ? (GRADI_ARENA[v - 1] || v) : "—";
 
 function valore(g, chiave) {
   if (chiave === "pt") return g.miglior_pal ? g.miglior_pal.pt : null;
   return g[chiave];
+}
+
+function gildaDi(nome) {
+  return DATI.gilde.find(x => x.membri.includes(nome));
+}
+
+function pannelloDettaglio(g) {
+  const p = g.miglior_pal;
+  const distintivi = p ? [p.lucky && "✨ lucky", p.alpha && "👑 alpha", p.risvegliato && "🔥 risvegliato"]
+    .filter(Boolean) : [];
+  const gilda = gildaDi(g.nome);
+  const campi = [
+    ["Paldeck", g.paldeck !== undefined ? g.paldeck + "%" : "—"],
+    ["Boss dei raid", num(g.bosses_raid)], ["Boss delle torri", num(g.bosses_torri)],
+    ["Dungeon completati", num(g.dungeon)], ["Tesori trovati", num(g.tesori)],
+    ["Accampamenti conquistati", num(g.accampamenti)], ["Reliquie raccolte", num(g.reliquie)],
+    ["Piattaforme petrolifere", num(g.oilrig)], ["Predatori abbattuti", num(g.predatori)],
+    ["Pesci pescati", num(g.pesca)], ["Condensazioni", num(g.condensazioni)],
+    ["Macellati", num(g.macellati)], ["Gilda", gilda ? gilda.nome : "—"],
+  ];
+  const testaPal = p ? `<div class="dett-pal"><b>${p.specie} lv${p.livello}</b> — ${num(p.pt)} PT
+      ${p.stelle ? " · ⭐" + p.stelle : ""}${p.iv ? " · IV " + p.iv : ""}${p.fiducia ? " · 💞 " + p.fiducia : ""}
+      ${distintivi.map(d => `<span class="distintivo">${d}</span>`).join(" ")}</div>` : "";
+  return testaPal + campi.map(([k, v]) =>
+    `<div class="voce"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+}
+
+function disegnaPodio() {
+  const top3 = [...DATI.giocatori]
+    .sort((a, b) => (valore(b, "pt") ?? -1) - (valore(a, "pt") ?? -1))
+    .slice(0, 3);
+  document.getElementById("podio").innerHTML = top3.map((g, i) => {
+    const p = g.miglior_pal;
+    return `<div class="pd p${i + 1}">
+      <div class="pd-t"><span class="pd-r">${i + 1}</span><span class="pd-n">${g.nome}</span><span class="pd-lv">LV ${num(g.livello)}</span></div>
+      <div class="pd-pal">Pal più forte<b>${p ? `${p.specie} lv${p.livello} · ${num(p.pt)} PT` : "—"}</b></div>
+      <div class="pd-st"><div>Pal<b>${num(g.pal)}</b></div><div>Catture<b>${num(g.captures_total)}</b></div><div>Arena<b>${gradoArena(g.arena_grado)}</b></div></div>
+    </div>`;
+  }).join("");
 }
 
 function disegnaGiocatori() {
@@ -159,133 +142,113 @@ function disegnaGiocatori() {
   const lista = DATI.giocatori
     .filter(g => !filtro || (g.nome || "").toLowerCase().includes(filtro))
     .sort((a, b) => {
+      if (ordine === "nome") return (a.nome || "").localeCompare(b.nome || "");
       const x = valore(a, ordine), y = valore(b, ordine);
-      if (ordine === "nome") return (a.nome || "").localeCompare(b.nome || "") * (crescente ? 1 : -1);
-      return ((y ?? -1) - (x ?? -1)) * (crescente ? -1 : 1);
+      return (y ?? -1) - (x ?? -1);
     });
 
-  document.getElementById("intestazioni").innerHTML =
-    '<th class="pos">#</th>' + COLONNE.map(([k, t]) =>
-      `<th data-k="${k}" class="${k === ordine ? "ordinata" : ""}">${t}</th>`).join("");
-  document.querySelectorAll("#intestazioni th[data-k]").forEach(th =>
-    th.onclick = () => {
-      const k = th.dataset.k;
-      crescente = (k === ordine) ? !crescente : false;
-      ordine = k; disegnaGiocatori();
-    });
+  document.getElementById("corpo").innerHTML = lista.length ? lista.map((g, i) => {
+    const p = g.miglior_pal;
+    const arena = gradoArena(g.arena_grado);
+    return `<tr class="riga" data-target="d${i}">
+      <td class="pos" style="${i === 0 ? "color:var(--lime)" : ""}">${i + 1}</td>
+      <td><span class="nome"><span class="icona">▸</span>${g.nome}</span></td>
+      <td>${num(g.livello)}</td><td>${num(g.pal)}</td><td>${num(g.captures_total)}</td>
+      <td><span class="arena${ARENA_ALTA.has(arena) ? " alta" : ""}">${arena}</span></td>
+      <td class="forte">${p ? `<b>${p.specie}</b> lv${p.livello} · ${num(p.pt)} PT` : "—"}</td>
+    </tr>
+    <tr class="dettaglio" id="d${i}"><td colspan="7"><div class="dett">${pannelloDettaglio(g)}</div></td></tr>`;
+  }).join("") : `<tr><td colspan="7" class="vuoto">Nessun giocatore trovato</td></tr>`;
 
-  document.getElementById("righe").innerHTML = lista.map((g, i) => {
-    const celle = COLONNE.map(([k, , scrivi]) => {
-      if (k === "nome") {
-        return `<td class="nome ${i === 0 ? "top1" : ""}" data-nome="${(g.nome||"").replace(/"/g,"&quot;")}">${g.nome || "?"}</td>`;
-      }
-      const v = valore(g, k);
-      const testo = scrivi ? scrivi(v, g) : num(v);
-      // il pal più forte è testo, non un numero: allineato a sinistra
-      return `<td${k === "pt" ? ' style="text-align:left"' : ""}>${testo}</td>`;
-    }).join("");
-    return `<tr><td class="pos">${i + 1}</td>${celle}</tr>`;
-  }).join("") || `<tr><td colspan="${COLONNE.length + 1}" class="vuoto">Nessun giocatore trovato</td></tr>`;
+  document.querySelectorAll("tr.riga").forEach(tr => tr.onclick = () => {
+    tr.classList.toggle("aperta");
+    document.getElementById(tr.dataset.target).classList.toggle("aperta");
+  });
 
-  document.querySelectorAll("td.nome").forEach(td =>
-    td.onclick = () => dettaglio(td.dataset.nome));
+  document.getElementById("carte").innerHTML = lista.length ? lista.map((g, i) => {
+    const p = g.miglior_pal;
+    return `<div class="carta">
+      <div class="carta-testa"><span class="carta-pos" style="${i === 0 ? "color:var(--lime)" : ""}">${i + 1}</span>
+        <span class="carta-nome"><span class="icona">▸</span>${g.nome}</span>
+        <span class="carta-metrica">${p ? num(p.pt) + " PT" : "—"}</span></div>
+      <div class="carta-corpo">
+        <div class="voce"><div class="k">Livello</div><div class="v">${num(g.livello)}</div></div>
+        <div class="voce"><div class="k">Pal posseduti</div><div class="v">${num(g.pal)}</div></div>
+        <div class="voce"><div class="k">Catture</div><div class="v">${num(g.captures_total)}</div></div>
+        <div class="voce"><div class="k">Arena</div><div class="v">${gradoArena(g.arena_grado)}</div></div>
+        ${pannelloDettaglio(g)}
+      </div>
+    </div>`;
+  }).join("") : `<div class="vuoto">Nessun giocatore trovato</div>`;
+
+  document.querySelectorAll(".carta").forEach(c =>
+    c.querySelector(".carta-testa").onclick = () => c.classList.toggle("aperta"));
+
   document.getElementById("conteggio").textContent =
     `${lista.length} giocatori su ${DATI.giocatori.length}`;
 }
 
-function dettaglio(nome) {
-  const g = DATI.giocatori.find(x => x.nome === nome);
-  if (!g) return;
-  const p = g.miglior_pal;
-  const simboli = p ? [p.lucky && "✨ lucky", p.alpha && "👑 alpha",
-                       p.risvegliato && "🔥 risvegliato"].filter(Boolean).join(" · ") : "";
-  const gilda = DATI.gilde.find(x => x.membri.includes(nome));
-  const voci = [
-    ["Livello", num(g.livello)], ["Pal posseduti", num(g.pal)],
-    ["Paldeck (specie)", num(g.paldeck)], ["Catture totali", num(g.captures_total)],
-    ["Boss delle torri", num(g.bosses_torri)], ["Boss dei raid", num(g.bosses_raid)],
-    ["Dungeon completati", num(g.dungeon)], ["Piattaforme petrolifere", num(g.oilrig)],
-    ["Predatori abbattuti", num(g.predatori)], ["Tesori trovati", num(g.tesori)],
-    ["Accampamenti conquistati", num(g.accampamenti)], ["Boss sul campo", num(g.boss_campo)],
-    ["Reliquie raccolte", num(g.reliquie)], ["Pesci pescati", num(g.pesca)],
-    ["Condensazioni", num(g.condensazioni)],
-    ["Gilda", gilda ? gilda.nome : "—"],
-  ];
-  document.getElementById("dettaglio-nome").textContent = nome;
-  document.getElementById("dettaglio-sub").textContent =
-    gilda ? `Gilda: ${gilda.nome}` : "Senza gilda";
-  document.getElementById("dettaglio-corpo").innerHTML =
-    (p ? `<div class="pal"><b>Pal più forte:</b> ${p.specie} lv${p.livello}
-          — <b>${num(p.pt)} PT</b><div class="tag">
-          ${simboli}${p.stelle ? " · ⭐" + p.stelle : ""}${p.iv ? " · IV " + p.iv : ""}
-          ${p.fiducia ? " · 💞 " + p.fiducia : ""}</div></div>` : "") +
-    '<div class="coppie">' +
-    voci.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join("") + "</div>";
-  document.getElementById("scheda-giocatore").showModal();
-}
+document.getElementById("ordina").innerHTML = METRICHE.map(([k, t]) =>
+  `<option value="${k}">Ordina per: ${t}</option>`).join("");
+document.getElementById("ordina").onchange = e => { ordine = e.target.value; disegnaGiocatori(); };
+document.getElementById("cerca").oninput = disegnaGiocatori;
 
 function classificaHTML(voci, formatta) {
   if (!voci || !voci.length) return '<div class="vuoto">nessun dato</div>';
   const medaglie = ["🥇", "🥈", "🥉"];
-  return "<ol>" + voci.slice(0, 25).map((v, i) =>
-    `<li><b>${v.nome}</b> — ${formatta ? formatta(v.valore) : num(v.valore)}
-     ${i < 3 ? medaglie[i] : ""}</li>`).join("") + "</ol>";
+  return "<ol class=\"passi\">" + voci.slice(0, 25).map((v, i) =>
+    `<li><b>${v.nome} ${i < 3 ? medaglie[i] : ""}</b><span>${formatta ? formatta(v.valore) : num(v.valore)}</span></li>`).join("") + "</ol>";
 }
 
 function disegnaSettimana() {
   const s = DATI.settimana;
   const ore = v => (v / 3600).toFixed(1) + " h";
-  let html = `<h2 style="margin:4px 0 14px">Settimana ${s.chiave}</h2><div class="griglia">`;
+  let html = `<div class="intro"><div><h1>Sfida della settimana</h1><p>Settimana ${s.chiave} — conta solo quello che fai da lunedì.</p></div></div><div class="griglia">`;
   for (const sfida of s.sfide) {
-    html += `<div class="scheda"><h3>${sfida.emoji} ${sfida.nome} <span class="tag">
-             — sfida a rotazione</span></h3>${classificaHTML(sfida.classifica)}</div>`;
+    html += `<div class="blocco"><h2>${sfida.emoji} ${sfida.nome}</h2>${classificaHTML(sfida.classifica)}</div>`;
   }
   for (const [titolo, voci] of Object.entries(s.classifiche)) {
-    html += `<div class="scheda"><h3>${titolo}</h3>
-             ${classificaHTML(voci, titolo === "Ore di gioco" ? ore : null)}</div>`;
+    html += `<div class="blocco"><h2>${titolo}</h2>${classificaHTML(voci, titolo === "Ore di gioco" ? ore : null)}</div>`;
   }
-  html += `<div class="scheda"><h3>MVP</h3>${classificaHTML(s.mvp)}</div></div>`;
+  html += `<div class="blocco"><h2>MVP</h2>${classificaHTML(s.mvp)}</div></div>`;
   document.getElementById("settimana").innerHTML = html;
 }
 
 function disegnaGilde() {
   const g = [...DATI.gilde].sort((a, b) => b.spedizioni - a.spedizioni);
   document.getElementById("gilde").innerHTML =
-    `<div class="conteggio" style="margin-bottom:10px">${g.length} gilde</div>` +
-    '<table><thead><tr><th class="pos">#</th><th>Gilda</th><th>Livello</th>' +
+    `<div class="intro"><div><h1>Gilde</h1><p>${g.length} gilde attive.</p></div></div>` +
+    '<div class="tabella"><table><thead><tr><th class="pos">#</th><th>Gilda</th><th>Livello</th>' +
     '<th>Membri</th><th>Accampamenti</th><th>Spedizioni</th></tr></thead><tbody>' +
-    g.map((x, i) => `<tr><td class="pos">${i + 1}</td>
-      <td class="${i === 0 ? "top1" : ""}"><b>${x.nome}</b>
-      <div class="tag">${x.membri.slice(0, 6).join(", ")}${x.membri.length > 6 ? "…" : ""}</div></td>
+    (g.length ? g.map((x, i) => `<tr>
+      <td class="pos" style="${i === 0 ? "color:var(--lime)" : ""}">${i + 1}</td>
+      <td><span class="nome">${x.nome}</span><div style="color:var(--tenue-scuro);font-size:12px;margin-top:2px">
+        ${x.membri.slice(0, 6).join(", ")}${x.membri.length > 6 ? "…" : ""}</div></td>
       <td>${num(x.livello)}</td><td>${x.membri.length}</td>
-      <td>${num(x.accampamenti)}</td><td>${num(x.spedizioni)}</td></tr>`).join("") +
-    "</tbody></table>";
+      <td>${num(x.accampamenti)}</td><td>${num(x.spedizioni)}</td></tr>`).join("")
+      : `<tr><td colspan="6" class="vuoto">Nessuna gilda</td></tr>`) +
+    "</tbody></table></div>";
 }
 
-document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
-  document.querySelectorAll("nav button").forEach(x => x.classList.remove("attivo"));
-  b.classList.add("attivo");
+document.querySelectorAll(".schede button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".schede button").forEach(x => x.classList.remove("attiva"));
+  b.classList.add("attiva");
   ["giocatori", "settimana", "gilde"].forEach(s =>
     document.getElementById(s).hidden = (s !== b.dataset.scheda));
 });
-document.getElementById("cerca").oninput = disegnaGiocatori;
 
 fetch("dati.json?" + Date.now())
   .then(r => r.json())
   .then(d => {
     DATI = d;
-    const quando = new Date(d.aggiornato);
-    document.getElementById("sottotitolo").textContent =
-      `${d.giocatori.length} giocatori · ${d.gilde.length} gilde · aggiornato ${quando.toLocaleString("it-IT")}`;
-    document.getElementById("pie").textContent =
-      "PT = indice di potenza (ATK×4 + DIF×3 + HP÷5 con statistiche reali). " +
-      "I pal posseduti comprendono il magazzino dimensionale. " +
-      "Le sfide contano solo i progressi della settimana in corso.";
-    disegnaGiocatori(); disegnaSettimana(); disegnaGilde();
+    document.getElementById("agg").textContent =
+      "Aggiornata " + new Date(d.aggiornato).toLocaleString("it-IT");
+    disegnaPodio(); disegnaGiocatori(); disegnaSettimana(); disegnaGilde();
   })
-  .catch(e => {
-    document.getElementById("sottotitolo").textContent = "dati non disponibili";
-    document.getElementById("righe").innerHTML =
-      '<tr><td colspan="13" class="vuoto">Impossibile caricare dati.json</td></tr>';
+  .catch(() => {
+    document.getElementById("agg").textContent = "dati non disponibili";
+    document.getElementById("corpo").innerHTML =
+      '<tr><td colspan="7" class="vuoto">Impossibile caricare dati.json</td></tr>';
   });
 </script>
+<script src="online.js"></script>
